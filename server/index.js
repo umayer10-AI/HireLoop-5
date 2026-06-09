@@ -94,6 +94,19 @@ const run = async () => {
             res.send(result)
         })
 
+        app.patch('/api/companies', async (req,res) => {
+            const {id} = req.params
+            const filter = {
+                _id: new ObjectId(id)
+            }
+            const m = req.body
+            const updated = {
+                $set: m.status
+            }
+            const result = await companyCollection.updateOne(filter,updated)
+            res.send(result)
+        })
+
         //aplications
 
         app.post('/api/applications', async(req,res) => {
