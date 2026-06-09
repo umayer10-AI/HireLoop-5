@@ -6,12 +6,16 @@ export const postCompanyData = async (v) => {
     return actionPostCompanyData(v,'/api/companies')
 }
 
+export const adminCompanies = async () => {
+    return await serverData(`/api/companies`)
+}
+
 export const submitApplication = async (v) => {
     return actionPostCompanyData(v,'/api/applications')
 }
 
 export const getCompanyData = async (reqruiterId) => {
-    return serverData(`/api/my/companies?reqruiterId=${reqruiterId}`)
+    return await serverData(`/api/my/companies?reqruiterId=${reqruiterId}`)
 }
 
 export const getLoggedReqruiter = async () => {

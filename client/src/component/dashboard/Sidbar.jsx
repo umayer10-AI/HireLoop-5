@@ -9,37 +9,105 @@ import {
   MdSettings,
 } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
+import { useSession } from "@/lib/auth-client";
 
 const Sidebar = () => {
   const pathname = usePathname();
 
-  const menus = [
+  const { data: session, isPending } = useSession();
+  const user = session?.user
+  // console.log(user)
+
+  let menus;
+
+  if(user?.role === 'recruiter'){
+    menus = [
     {
       label: "Dashboard",
-      path: "/dashboard",
+      path: "/dashboard/recruiter",
       icon: MdDashboard,
     },
     {
       label: "My Company",
-      path: "/dashboard/company",
+      path: "/dashboard/recruiter/company",
       icon: MdBusiness,
     },
     {
       label: "Manage Jobs",
-      path: "/dashboard/manage",
+      path: "/dashboard/recruiter/manage",
       icon: MdWork,
     },
     {
       label: "Applications",
-      path: "/dashboard/application",
+      path: "/dashboard/recruiter/application",
       icon: FaFileAlt,
     },
     {
       label: "Settings",
-      path: "/dashboard/setting",
+      path: "/dashboard/recruiter/setting",
       icon: MdSettings,
     },
   ];
+  }
+  else if(user?.role==='seeker'){
+    menus = [
+    {
+      label: "Dashboard",
+      path: "/dashboard/seeker",
+      icon: MdDashboard,
+    },
+    {
+      label: "My Company",
+      path: "/dashboard/seeker/company",
+      icon: MdBusiness,
+    },
+    {
+      label: "Manage Jobs",
+      path: "/dashboard/seeker/manage",
+      icon: MdWork,
+    },
+    {
+      label: "Applications",
+      path: "/dashboard/seeker/application",
+      icon: FaFileAlt,
+    },
+    {
+      label: "Settings",
+      path: "/dashboard/seeker/setting",
+      icon: MdSettings,
+    },
+  ];
+  }
+  else if(user?.role==='admin'){
+    menus = [
+    {
+      label: "Dashboard",
+      path: "/dashboard/admin",
+      icon: MdDashboard,
+    },
+    {
+      label: "My Company",
+      path: "/dashboard/admin/company",
+      icon: MdBusiness,
+    },
+    {
+      label: "Manage Jobs",
+      path: "/dashboard/admin/manage",
+      icon: MdWork,
+    },
+    {
+      label: "Applications",
+      path: "/dashboard/admin/application",
+      icon: FaFileAlt,
+    },
+    {
+      label: "Settings",
+      path: "/dashboard/admin/setting",
+      icon: MdSettings,
+    },
+  ];
+  }
+
 
   return (
     <aside className="w-72 h-screen bg-[#121212] border-r border-gray-800 text-white p-6 flex flex-col">
@@ -70,7 +138,7 @@ const Sidebar = () => {
 
       {/* Menu */}
       <nav className="space-y-2">
-        {menus.map((menu) => (
+        {menus?.map((menu) => (
           <NavItem
             key={menu.path}
             label={menu.label}

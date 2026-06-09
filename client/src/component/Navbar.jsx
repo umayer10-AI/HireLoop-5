@@ -32,6 +32,33 @@ const Navbar = () => {
     },
   ];
 
+  if(user?.email){
+    if(user?.role==='seeker'){
+      navLinks.push(
+      {
+      name: "Dashboard",
+      path: "/dashboard/seeker",
+    },
+    )
+    }
+    else if(user?.role==='admin'){
+      navLinks.push(
+      {
+      name: "Dashboard",
+      path: "/dashboard/admin",
+    },
+    )
+    }
+    else{
+      navLinks.push(
+        {
+        name: "Dashboard",
+        path: "/dashboard",
+      },
+      )
+    }
+  }
+
   const a = async () => {
     await authClient.signOut()
     toast.error('User Logout',
