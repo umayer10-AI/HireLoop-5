@@ -14,6 +14,10 @@ export const submitApplication = async (v) => {
     return actionPostCompanyData(v,'/api/applications')
 }
 
+export const updateCompany = async(id,v) => {
+    return actionPostCompanyData(v,`/api/companies/${id}`,'PATCH')
+}
+
 export const getCompanyData = async (reqruiterId) => {
     return await serverData(`/api/my/companies?reqruiterId=${reqruiterId}`)
 }

@@ -1,8 +1,11 @@
 import { adminCompanies } from '@/lib/api/companies';
 import React from 'react';
+import ActionButtons from './ActionButtons';
 
 const AdminCompaniesPage = async () => {
     const data = await adminCompanies();
+
+    console.log(data)
 
     return (
         <div className="p-6 bg-[#121212] min-h-screen text-white">
@@ -33,15 +36,12 @@ const AdminCompaniesPage = async () => {
                                 <td className="p-4 text-gray-300">{company.location}</td>
                                 <td className="p-4">
                                     <span className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${
-                                        company.status === 'pending' ? 'bg-yellow-900/30 text-yellow-500' : 'bg-green-900/30 text-green-500'
+                                        company.status === 'pending' && 'bg-yellow-900/30 text-yellow-500' || company.status === 'Rejected' && 'bg-red-900/30 text-red-500' || company.status === 'Approved' && 'bg-green-900/30 text-green-500'
                                     }`}>
                                         {company.status}
                                     </span>
                                 </td>
-                                <td className="p-4">
-                                    <button className="text-blue-400 hover:underline mr-4">Approve</button>
-                                    <button className="text-red-400 hover:underline">Reject</button>
-                                </td>
+                                <ActionButtons company={company}></ActionButtons>
                             </tr>
                         ))}
                     </tbody>

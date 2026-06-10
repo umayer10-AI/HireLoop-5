@@ -94,14 +94,16 @@ const run = async () => {
             res.send(result)
         })
 
-        app.patch('/api/companies', async (req,res) => {
+        app.patch('/api/companies/:id', async (req,res) => {
             const {id} = req.params
             const filter = {
                 _id: new ObjectId(id)
             }
             const m = req.body
             const updated = {
-                $set: m.status
+                $set: {
+                    status: m.status
+                }
             }
             const result = await companyCollection.updateOne(filter,updated)
             res.send(result)
@@ -129,10 +131,31 @@ const run = async () => {
             res.send(result)
         })
 
+        // app.get('/user/jobs/browser', async (req,res) => {
+        //     const result = await jobsCollection.find().toArray()
+        //     res.send(result)
+        // })
+
         app.get('/user/jobs/browser', async (req,res) => {
-            const result = await jobsCollection.find().toArray()
-            res.send(result)
-        })
+            const jobs = await jobsCollection.find().toArray();
+            for (const job of jobs) {
+                job.applications =
+                    await applicationsCollection.countDocuments({
+                        jobId: job._id.toString()
+                    });
+            }
+            res.send(jobs);
+        });
+
+        app.get('/user/jobs/browser2', async (req,res) => {
+            const jobs = [
+                {
+                    $skip: 2
+                }
+            ]
+            const result = await applicationsCollection.aggregate(jobs).toArray();
+            res.send(result);
+        });
 
         app.get('/user/jobs/browser/:id', async (req,res) => {
             const {id} = req.params
@@ -140,6 +163,29 @@ const run = async () => {
                 _id: new ObjectId(id)
             }
             const result = await jobsCollection.findOne(query)
+            res.send(result)
+        })
+
+        app.get('/api/stats', async (req,res) => {
+            const pipeline = [
+                {
+                    $group: {
+                        _id: '$jobType',
+                        count: { $sum: 1}
+                    }
+                },
+                {
+                    $sort: {count: -1}
+                },
+                {
+                    $project: {
+                        jobType: '$_id',
+                        count: 1,
+                        _id: 0
+                    }
+                }
+            ]
+            const result = await jobsCollection.aggregate(pipeline).toArray()
             res.send(result)
         })
 

@@ -18,9 +18,9 @@ export const postData = async (v) => {
 }
 
 
-export const actionPostCompanyData = async (v,path) => {
+export const actionPostCompanyData = async (v,path, method='POST') => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}${path}`,{
-        method: "POST",
+        method: method,
         headers: {
             'content-type': 'application/json'
         },
