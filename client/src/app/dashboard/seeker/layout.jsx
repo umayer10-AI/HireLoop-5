@@ -9,7 +9,6 @@ const layout = async ({children}) => {
         headers: await headers(),
     });
     const user = session?.user
-    console.log(user)
 
     let MyRole;
     if(user?.role==='seeker'){
