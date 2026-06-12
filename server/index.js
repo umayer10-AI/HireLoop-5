@@ -5,6 +5,7 @@ const cors = require('cors')
 // const dotenv = require('dotenv')
 const port = 5000 || process.env.PORT
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { createRemoteJWKSet, jwtVerify } = require('jose-cjs')
 // dotenv.config()
 
 app.use(cors())
@@ -20,6 +21,33 @@ const client = new MongoClient(uri, {
     }
 });
 
+const JWKS = createRemoteJWKSet(
+    new URL(`${process.env.NEXT}/api/auth/jwks`)
+)
+
+const verify = async (req,res,next) => {
+    const header = req?.headers?.authorization
+    if(!header){
+        return res.status(401).json({message: 'Unauthorized'})
+    }
+    const token = header?.split(' ')[1]
+    console.log(token)
+    if(!token){
+        return res.status(401).json({message: 'Unauthorized'})
+    }
+
+    try{
+        const { payload } = await jwtVerify(token, JWKS)
+        console.log(payload)
+        // req.user = payload;
+        next()
+    }
+    catch(error){
+        return res.status(403).json({message: 'Forbidden'})
+    }
+    
+}
+
 const run = async () => {
     try {
         await client.connect();
@@ -31,7 +59,7 @@ const run = async () => {
         const applicationsCollection = db.collection('applications')
         const subscriptionCollection = db.collection('subscription')
 
-        app.get('/user', async (req,res) => {
+        app.get('/user',verify, async (req,res) => {
             const result = await userCollection.find().toArray()
             res.send(result)
         })
@@ -79,7 +107,7 @@ const run = async () => {
 
         // companies
 
-        app.post('/api/companies', async(req,res) => {
+        app.post('/api/companies',verify, async(req,res) => {
             const newUser = req.body
             const newCompany = {
                 ...newUser,

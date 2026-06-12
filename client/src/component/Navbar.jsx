@@ -53,7 +53,7 @@ const Navbar = () => {
       navLinks.push(
         {
         name: "Dashboard",
-        path: "/dashboard",
+        path: "/dashboard/recruiter",
       },
       )
     }

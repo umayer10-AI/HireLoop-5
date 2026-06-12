@@ -1,5 +1,14 @@
 import { redirect } from "next/navigation"
 import toast from "react-hot-toast"
+import { getUserToken } from "./session"
+
+export const authHedaer = async() => {
+    const token = await getUserToken()
+    const header = {
+        authorization: `Bearer ${token}`
+    }
+    return token ? header : {}
+}
 
 export const postData = async (v) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user`,{
@@ -22,7 +31,8 @@ export const actionPostCompanyData = async (v,path, method='POST') => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}${path}`,{
         method: method,
         headers: {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            ...await authHedaer()
         },
         body: JSON.stringify(v)
     })
