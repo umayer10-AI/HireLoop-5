@@ -81,3 +81,4 @@ export const RecentApplications = async () => {
     </div>
   );
 };
+
