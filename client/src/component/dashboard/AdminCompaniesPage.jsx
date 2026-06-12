@@ -51,4 +51,5 @@ const AdminCompaniesPage = async () => {
     );
 };
 
+
 export default AdminCompaniesPage;
