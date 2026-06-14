@@ -6,6 +6,9 @@ export default async function JobDashboard() {
   // Server-side database theke data fetch
   const jobsData = await getJobsData();
 
+  // const sp = new URLSearchParams()
+  // console.log(sp)
+
   return (
     <div className="min-h-screen bg-gray-950 p-6 font-sans text-white">
       {/* Client layout component e pure array data pass hobe */}
