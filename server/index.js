@@ -161,51 +161,66 @@ const run = async () => {
 
         app.get('/user/jobs/browser', async (req,res) => {
 
-            const { search, jobType, category, isRemote } = req.query;
+            if(req.query){
+                const { search, jobType, category, isRemote } = req.query;
 
-            const query = {};
-            if(jobType) {
-            query.jobType = jobType;
-            }
-            if(category) {
-            query.jobCategory = category;
-            }
-            if (isRemote !== undefined) {
-            query.isRemote = isRemote === "true";
-            }
-            if (search) {
-                query.$or = [
-                    {
-                        jobTitle: {
-                        $regex: search,
-                        $options: "i",
+                const query = {};
+                if(jobType) {
+                query.jobType = jobType;
+                }
+                if(category) {
+                query.jobCategory = category;
+                }
+                if (isRemote !== undefined) {
+                query.isRemote = isRemote === "true";
+                }
+                if(search) {
+                    query.$or = [
+                        {
+                            jobTitle: {
+                            $regex: search,
+                            $options: "i",
+                            },
                         },
-                    },
-                    {
-                        responsibilities: {
-                        $regex: search,
-                        $options: "i",
+                        {
+                            responsibilities: {
+                            $regex: search,
+                            $options: "i",
+                            },
                         },
-                    },
-                    {
-                        requirements: {
-                        $regex: search,
-                        $options: "i",
+                        {
+                            requirements: {
+                            $regex: search,
+                            $options: "i",
+                            },
                         },
-                    },
-                    {
-                        companyName: {
-                        $regex: search,
-                        $options: "i",
+                        {
+                            companyName: {
+                            $regex: search,
+                            $options: "i",
+                            },
                         },
-                    },
-                ];
-            }
+                    ];
+                }
 
-            console.log(query);
+                if(req.query.page){
+                    const page = req.query.page
+                    const perPage = req.query.perPage || 5
+                    const skipItems = (page-1) * perPage
 
-            const result = await jobsCollection.find(query).toArray();
-            res.send(result);
+                    const jobs = await jobsCollection.find(query).skip(skipItems).limit(perPage).toArray();
+                    return res.send(jobs);
+                }
+
+                console.log(query);
+
+                const result = await jobsCollection.find(query).toArray();
+                res.send(result);
+            }
+            else{
+                const result = await jobsCollection.find().toArray();
+                res.send(result);
+            }
         })
 
         // app.get('/user/jobs/browser', async (req,res) => {

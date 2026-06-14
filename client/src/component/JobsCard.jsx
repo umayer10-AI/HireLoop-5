@@ -14,6 +14,7 @@ export default async function JobDashboard({searchQuery}) {
     console.log(spString)
   
   const jobsData = await getJobsData(spString);
+  console.log(jobsData)
 
     // const searchQuery = await searchParams
     // console.log(searchQuery)

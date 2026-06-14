@@ -1,5 +1,6 @@
 "use client";
 
+import { Pagination } from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -9,8 +10,21 @@ export default function Jobs({ initialJobs = [], filterSearch }) {
   const [selectedType, setSelectedType] = useState(filterSearch.jobType || '');
   const [selectedCategory, setSelectedCategory] = useState(filterSearch.category || '');
   const [isRemoteOnly, setIsRemoteOnly] = useState(filterSearch.isRemote || false);
+  const [page, setPage] = useState(filterSearch.page || 1);
 
   const router = useRouter()
+
+  const totalItems = initialJobs.length;
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(totalItems/itemsPerPage);
+
+  const getPageNumbers = () => {
+    const pages = [1,2,3,4,5,6,,7,8]
+    return pages
+  }
+
+  const startItem = 1;
+  const endItem = totalItems;
 
   useEffect(() => {
   const sp = new URLSearchParams();
@@ -31,11 +45,15 @@ export default function Jobs({ initialJobs = [], filterSearch }) {
     sp.set("isRemote", "true");
   }
 
+  if (page) {
+    sp.set("page", page);
+  }
+
   const query = sp.toString();
 
   router.push(query ? `?${query}` : "/jobs");
 
-}, [selectedType, selectedCategory, isRemoteOnly, searchQuery]);
+}, [selectedType, selectedCategory, isRemoteOnly, searchQuery, page]);
 
   // console.log(selectedType)
 
@@ -63,8 +81,8 @@ export default function Jobs({ initialJobs = [], filterSearch }) {
           className="bg-neutral-900 border border-neutral-800 text-neutral-300 px-3 py-2.5 rounded-xl"
         >
           <option value="All Types">All Types</option>
-          <option value="Full Time">Full Time</option>
-          <option value="Part Time">Part Time</option>
+          <option value="full-time">Full Time</option>
+          <option value="part-time">Part Time</option>
           <option value="Internship">Internship</option>
         </select>
 
@@ -75,8 +93,8 @@ export default function Jobs({ initialJobs = [], filterSearch }) {
           className="bg-neutral-900 border border-neutral-800 text-neutral-300 px-3 py-2.5 rounded-xl"
         >
           <option value="All Categories">All Categories</option>
-          <option value="Frontend">Frontend</option>
-          <option value="Backend">Backend</option>
+          <option value="management">Management</option>
+          <option value="engineering">Engineering</option>
           <option value="Full Stack">Full Stack</option>
         </select>
 
@@ -135,6 +153,39 @@ export default function Jobs({ initialJobs = [], filterSearch }) {
           </div>
         ))}
       </div>
+
+      <Pagination className="w-full">
+      <Pagination.Summary>
+        Showing {startItem}-{endItem} of {totalItems} results
+      </Pagination.Summary>
+      <Pagination.Content>
+        <Pagination.Item>
+          <Pagination.Previous isDisabled={page === 1} onPress={() => setPage((p) => p - 1)}>
+            <Pagination.PreviousIcon />
+            <span>Previous</span>
+          </Pagination.Previous>
+        </Pagination.Item>
+        {getPageNumbers().map((p, i) =>
+          p === "ellipsis" ? (
+            <Pagination.Item key={`ellipsis-${i}`}>
+              <Pagination.Ellipsis />
+            </Pagination.Item>
+          ) : (
+            <Pagination.Item key={p}>
+              <Pagination.Link isActive={p === page} onPress={() => setPage(p)}>
+                {p}
+              </Pagination.Link>
+            </Pagination.Item>
+          ),
+        )}
+        <Pagination.Item>
+          <Pagination.Next isDisabled={page === totalPages} onPress={() => setPage((p) => p + 1)}>
+            <span>Next</span>
+            <Pagination.NextIcon />
+          </Pagination.Next>
+        </Pagination.Item>
+      </Pagination.Content>
+    </Pagination>
     </div>
   );
 }
