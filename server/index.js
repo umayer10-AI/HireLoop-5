@@ -173,6 +173,34 @@ const run = async () => {
             if (isRemote !== undefined) {
             query.isRemote = isRemote === "true";
             }
+            if (search) {
+                query.$or = [
+                    {
+                        jobTitle: {
+                        $regex: search,
+                        $options: "i",
+                        },
+                    },
+                    {
+                        responsibilities: {
+                        $regex: search,
+                        $options: "i",
+                        },
+                    },
+                    {
+                        requirements: {
+                        $regex: search,
+                        $options: "i",
+                        },
+                    },
+                    {
+                        companyName: {
+                        $regex: search,
+                        $options: "i",
+                        },
+                    },
+                ];
+            }
 
             console.log(query);
 
