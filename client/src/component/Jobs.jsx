@@ -4,16 +4,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-export default function Jobs({ initialJobs = [] }) {
+export default function Jobs({ initialJobs = [], filterSearch }) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState("All Types");
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
-  const [isRemoteOnly, setIsRemoteOnly] = useState(false);
+  const [selectedType, setSelectedType] = useState(filterSearch.jobType || '');
+  const [selectedCategory, setSelectedCategory] = useState(filterSearch.category || '');
+  const [isRemoteOnly, setIsRemoteOnly] = useState(filterSearch.isRemote || false);
 
   const router = useRouter()
 
   useEffect(() => {
     const sp = new URLSearchParams();
+
+    if(searchQuery){
+      sp.set("search", searchQuery);
+    }
 
     if (selectedType !== "All Types") {
       sp.set("jobType", selectedType);
@@ -31,15 +35,15 @@ export default function Jobs({ initialJobs = [] }) {
 
     console.log(sp.toString())
 
-}, [selectedType, selectedCategory, isRemoteOnly]);
+}, [selectedType, selectedCategory, isRemoteOnly, searchQuery]);
 
-  console.log(selectedType)
+  // console.log(selectedType)
 
   return (
     <div className="w-full max-w-[80%] mx-auto">
       
       {/* Filter UI */}
-      <div className="w-full mb-8 bg-[#121212]/90 p-4 rounded-2xl border border-neutral-800 flex flex-wrap items-end gap-4">
+      <div className="w-full mb-8 bg-[#121212]/90 p-4 rounded-2xl border border-neutral-800 flex flex-wrap items-center gap-4">
         
         {/* Search */}
         <div className="flex-1 min-w-[240px]">
