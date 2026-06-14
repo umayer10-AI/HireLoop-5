@@ -4,7 +4,7 @@ import React from 'react';
 const page = async ({searchParams}) => {
 
     const searchQuery = await searchParams
-    console.log(searchQuery)
+    // console.log(searchQuery)
 
     return (
         <div>

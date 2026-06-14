@@ -3,8 +3,17 @@ import React from 'react';
 import Jobs from './Jobs';
 
 export default async function JobDashboard({searchQuery}) {
-  // Server-side database theke data fetch
-  const jobsData = await getJobsData();
+
+  const myfiltering = {
+    ...searchQuery,
+    isRemote: searchQuery.isRemote ==='true'? true: false
+  }
+
+    const sp = new URLSearchParams(myfiltering)
+    const spString = sp.toString()
+    console.log(spString)
+  
+  const jobsData = await getJobsData(spString);
 
     // const searchQuery = await searchParams
     // console.log(searchQuery)
@@ -12,7 +21,7 @@ export default async function JobDashboard({searchQuery}) {
   return (
     <div className="min-h-screen bg-gray-950 p-6 font-sans text-white">
       {/* Client layout component e pure array data pass hobe */}
-      <Jobs initialJobs={jobsData} filterSearch={searchQuery}/>
+      <Jobs initialJobs={jobsData} filterSearch={myfiltering}/>
     </div>
   );
 }

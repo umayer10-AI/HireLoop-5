@@ -159,21 +159,29 @@ const run = async () => {
             res.send(result)
         })
 
-        // app.get('/user/jobs/browser', async (req,res) => {
-        //     const result = await jobsCollection.find().toArray()
-        //     res.send(result)
-        // })
-
         app.get('/user/jobs/browser', async (req,res) => {
-            const jobs = await jobsCollection.find().toArray();
-            for (const job of jobs) {
-                job.applications =
-                    await applicationsCollection.countDocuments({
-                        jobId: job._id.toString()
-                    });
-            }
-            res.send(jobs);
-        });
+
+            const query = req.params
+            console.log(query)
+
+            const result = await jobsCollection.find().toArray()
+            res.send(result)
+        })
+
+        // app.get('/user/jobs/browser', async (req,res) => {
+
+        //     const query = req.params
+        //     console.log(query)
+
+        //     const jobs = await jobsCollection.find().toArray();
+        //     for (const job of jobs) {
+        //         job.applications =
+        //             await applicationsCollection.countDocuments({
+        //                 jobId: job._id.toString()
+        //             });
+        //     }
+        //     res.send(jobs);
+        // });
 
         app.get('/user/jobs/browser2', async (req,res) => {
             const jobs = [
