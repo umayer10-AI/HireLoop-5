@@ -13,27 +13,27 @@ export default function Jobs({ initialJobs = [], filterSearch }) {
   const router = useRouter()
 
   useEffect(() => {
-    const sp = new URLSearchParams();
+  const sp = new URLSearchParams();
 
-    if(searchQuery){
-      sp.set("search", searchQuery);
-    }
+  if (searchQuery.trim() !== "") {
+    sp.set("search", searchQuery);
+  }
 
-    if (selectedType !== "All Types") {
-      sp.set("jobType", selectedType);
-    }
+  if (selectedType && selectedType !== "All Types") {
+    sp.set("jobType", selectedType);
+  }
 
-    if(selectedCategory !== "All Categories") {
-      sp.set("category", selectedCategory);
-    }
-    if(isRemoteOnly) {
-      sp.set("isRemote", isRemoteOnly);
-    }
+  if (selectedCategory && selectedCategory !== "All Categories") {
+    sp.set("category", selectedCategory);
+  }
 
-    const query = sp.toString();
-    router.push(query ? `?${query}` : "");
+  if (isRemoteOnly) {
+    sp.set("isRemote", "true");
+  }
 
-    console.log(sp.toString())
+  const query = sp.toString();
+
+  router.push(query ? `?${query}` : "/jobs");
 
 }, [selectedType, selectedCategory, isRemoteOnly, searchQuery]);
 

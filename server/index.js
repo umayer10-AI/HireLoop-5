@@ -161,11 +161,23 @@ const run = async () => {
 
         app.get('/user/jobs/browser', async (req,res) => {
 
-            const query = req.params
-            console.log(query)
+            const { search, jobType, category, isRemote } = req.query;
 
-            const result = await jobsCollection.find().toArray()
-            res.send(result)
+            const query = {};
+            if(jobType) {
+            query.jobType = jobType;
+            }
+            if(category) {
+            query.jobCategory = category;
+            }
+            if (isRemote !== undefined) {
+            query.isRemote = isRemote === "true";
+            }
+
+            console.log(query);
+
+            const result = await jobsCollection.find(query).toArray();
+            res.send(result);
         })
 
         // app.get('/user/jobs/browser', async (req,res) => {
