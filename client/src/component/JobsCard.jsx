@@ -16,7 +16,6 @@ export default async function JobDashboard({searchQuery}) {
   const jobsData = await getJobsData(spString);
   console.log(jobsData)
 
-
   return (
     <div className="min-h-screen bg-gray-950 p-6 font-sans text-white">
       {/* Client layout component e pure array data pass hobe */}
