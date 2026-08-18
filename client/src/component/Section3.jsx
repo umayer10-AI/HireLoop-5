@@ -5,6 +5,7 @@ import { Check, Crown, Rocket, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+
 const plans = [
   {
     icon: Sparkles,
